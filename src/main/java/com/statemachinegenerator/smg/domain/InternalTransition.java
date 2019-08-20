@@ -18,7 +18,6 @@ public class InternalTransition implements Transition {
     @Id
     private String id;
 
-    //private String type;
     private String source;
     private long timer;
 

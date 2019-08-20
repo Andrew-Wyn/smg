@@ -22,13 +22,13 @@ public class FSMConfiguration {
     @Id
     private String id;
 
-    private List<String> states;
+    private List<State> states;
     private List<Transition> transitions;
 
     private String machineId;
     private Boolean autoStartUp;
 
-    public FSMConfiguration(List<String> states, List<Transition> transitions, String machineId, Boolean autoStartUp) {
+    public FSMConfiguration(List<State> states, List<Transition> transitions, String machineId, Boolean autoStartUp) {
         this.states = states;
         this.transitions = transitions;
         this.machineId = machineId;

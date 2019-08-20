@@ -7,25 +7,28 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 
-@JsonTypeName("external")
-public class ExternalTransition implements Transition {
+@JsonTypeName("choice")
+public class ChoiceTransition implements Transition {
 
     @Id
     private String id;
 
     private String source;
-    private String target;
-    private String event;
+    private String first;
+    private List<String> then;
+    private String last;
 
-    public ExternalTransition(String source, String target, String event){
+    public ChoiceTransition(String source, String first, List<String> then, String last){
         this.source = source;
-        this.target = target;
-        this.event = event;
+        this.first = first;
+        this.last = last;
     }
 
 }

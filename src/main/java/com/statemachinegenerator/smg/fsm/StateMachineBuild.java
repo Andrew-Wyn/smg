@@ -1,6 +1,7 @@
 package com.statemachinegenerator.smg.fsm;
 
 import com.statemachinegenerator.smg.domain.FSMConfiguration;
+import com.statemachinegenerator.smg.domain.State;
 import com.statemachinegenerator.smg.domain.Transition;
 import com.statemachinegenerator.smg.plugins.model.TransitionPlugin;
 import com.statemachinegenerator.smg.plugins.model.TransitionTypeInterface;
@@ -47,11 +48,28 @@ public class StateMachineBuild {
     private void makeStates(FSMConfiguration fsmConfiguration, StateMachineBuilder.Builder<String, String> builder) throws Exception{
         StateConfigurer<String, String> stateConfigurer = builder.configureStates().withStates();
 
-        List<String> states = fsmConfiguration.getStates();
+        List<State> states = fsmConfiguration.getStates();
 
-        stateConfigurer = stateConfigurer.initial(states.get(0));
-        stateConfigurer = stateConfigurer.states(new HashSet<>(states));
-        stateConfigurer.end(states.get(states.size()-1));
+        stateConfigurer = stateConfigurer.initial(states.get(0).getValue());
+
+        for(State state : states){
+
+            stateConfigurer = stateConfigurer.state(state.getValue());
+
+            switch(state.getType()){
+                case CHOICE:
+                    stateConfigurer = stateConfigurer.choice(state.getValue()); break;
+                case JUNCTION:
+                    stateConfigurer = stateConfigurer.junction(state.getValue()); break;
+                case FORK:
+                    stateConfigurer = stateConfigurer.fork(state.getValue()); break;
+                case JOIN:
+                    stateConfigurer = stateConfigurer.join(state.getValue()); break;
+
+            }
+        }
+
+        stateConfigurer.end(states.get(states.size()-1).getValue());
     }
 
     private void makeTransictions(FSMConfiguration fsmConfiguration, StateMachineBuilder.Builder<String, String> builder) throws Exception{
@@ -65,6 +83,7 @@ public class StateMachineBuild {
                 System.out.println(transition.getClass());
                 if(castedPlugin.check(transition.getClass())){
                     transitionConfigurer = castedPlugin.processTransition(transition, transitionConfigurer);
+                    break;
                 }
             }
         }

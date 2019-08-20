@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = ExternalTransition.class, name = "external"),
-        @JsonSubTypes.Type(value = InternalTransition.class, name = "internal")
+        @JsonSubTypes.Type(value = InternalTransition.class, name = "internal"),
+        @JsonSubTypes.Type(value = ChoiceTransition.class, name = "choice")
 })
 public interface Transition {}
