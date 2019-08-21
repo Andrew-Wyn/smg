@@ -1,6 +1,8 @@
 package com.statemachinegenerator.smg.fsm;
 
+import com.bmeme.lib.libmethods.LibAction;
 import com.statemachinegenerator.smg.domain.FSMConfiguration;
+import com.statemachinegenerator.smg.domain.structures.Region;
 import com.statemachinegenerator.smg.domain.structures.State;
 import com.statemachinegenerator.smg.domain.transitions.Transition;
 import com.statemachinegenerator.smg.plugins.model.TransitionPlugin;
@@ -8,13 +10,16 @@ import com.statemachinegenerator.smg.plugins.model.TransitionTypeInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.StateMachineBuilder;
+import org.springframework.statemachine.config.builders.StateMachineConfigurer;
+import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 import org.springframework.statemachine.config.configurers.StateConfigurer;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.List;
+import java.lang.reflect.Method;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -29,7 +34,10 @@ public class StateMachineBuild {
         makeConfiguration(fsmConfiguration, builder);
 
         // states
-        makeStates(fsmConfiguration, builder);
+        makeStates(fsmConfiguration.getInitial(), fsmConfiguration.getEnd(), fsmConfiguration.getStates(), builder.configureStates().withStates());
+
+        //regions
+        makeRegions(fsmConfiguration, builder);
 
         // transictions
         makeTransictions(fsmConfiguration, builder);
@@ -44,16 +52,29 @@ public class StateMachineBuild {
                 .listener(new StateMachineEventListener());
     }
 
-    private void makeStates(FSMConfiguration fsmConfiguration, StateMachineBuilder.Builder<String, String> builder) throws Exception{
-        StateConfigurer<String, String> stateConfigurer = builder.configureStates().withStates();
+    private void makeStates(String initial, String end, List<State> states, StateConfigurer<String, String> stateConfigurer) throws Exception{
+        if(Objects.nonNull(initial))
+            stateConfigurer = stateConfigurer.initial(initial);
 
-        List<State> states = fsmConfiguration.getStates();
+        Object actions = applicationContext.getBeansOfType(LibAction.class);
 
-        stateConfigurer = stateConfigurer.initial(states.get(0).getValue());
+        List<Method> actionMethods = new ArrayList<>();
+
+        Collections.addAll(actionMethods, actions.getClass().getMethods());
+
+        Method entryAction;
+        Method exitAction;
 
         for(State state : states){
 
-            stateConfigurer = stateConfigurer.state(state.getValue());
+            entryAction = actionMethods.stream().filter(m -> m.getName().equals(state.getEntryAction())).findFirst().orElse(null);
+            exitAction = actionMethods.stream().filter(m -> m.getName().equals(state.getExitAction())).findFirst().orElse(null);
+
+            stateConfigurer = stateConfigurer.state(
+                    state.getValue(),
+                    Objects.nonNull(entryAction) ? (Action<String, String>)entryAction.invoke(actions) : (ctx) -> {},
+                    Objects.nonNull(exitAction) ? (Action<String, String>)exitAction.invoke(actions) : (ctx) -> {}
+                    );
 
             switch(state.getType()){
                 case CHOICE:
@@ -68,7 +89,21 @@ public class StateMachineBuild {
             }
         }
 
-        stateConfigurer.end(states.get(states.size()-1).getValue());
+        if(Objects.nonNull(end))
+            stateConfigurer.initial(end);
+    }
+
+    private void makeRegions(FSMConfiguration fsmConfiguration, StateMachineBuilder.Builder<String, String> builder) throws Exception{
+
+        StateConfigurer<String, String> stateConfigurer = builder.configureStates().withStates();
+
+        for(Region region : fsmConfiguration.getRegions()){
+
+            stateConfigurer = stateConfigurer.parent(region.getParent());
+
+            makeStates(region.getInitial(), region.getEnd(), region.getStates(), stateConfigurer);
+
+        }
     }
 
     private void makeTransictions(FSMConfiguration fsmConfiguration, StateMachineBuilder.Builder<String, String> builder) throws Exception{

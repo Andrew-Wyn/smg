@@ -18,19 +18,9 @@ import java.util.List;
 @JsonTypeName("choice")
 public class ChoiceTransition implements Transition {
 
-    @Id
-    private String id;
-
     private String source;
     private ChoiceState first;
     private List<ChoiceState> thens;
     private String last;
-
-    public ChoiceTransition(String source, ChoiceState first,  List<ChoiceState> thens, String last){
-        this.source = source;
-        this.first = first;
-        this.thens = thens;
-        this.last = last;
-    }
 
 }

@@ -15,19 +15,10 @@ import org.springframework.data.annotation.Id;
 @JsonTypeName("internal")
 public class InternalTransition implements Transition {
 
-    @Id
-    private String id;
-
     private String source;
-    private long timer;
+    private Long timer;
+    private Long timerOnce;
     private String action;
     private String errorAction;
-
-    public InternalTransition(String source, long timer, String action, String errorAction){
-        this.source = source;
-        this.timer = timer;
-        this.action = action;
-        this.errorAction = errorAction;
-    }
 
 }

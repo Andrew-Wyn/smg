@@ -1,6 +1,7 @@
 package com.statemachinegenerator.smg.plugins.plugin;
 
 import com.bmeme.lib.libmethods.LibAction;
+import com.bmeme.lib.libmethods.LibMethod;
 import com.statemachinegenerator.smg.domain.transitions.ExternalTransition;
 import com.statemachinegenerator.smg.domain.transitions.Transition;
 //import com.statemachinegenerator.smg.libmethods.LibAction;
@@ -27,7 +28,7 @@ public class ExternalTransitionPlugin implements TransitionTypeInterface {
     public StateMachineTransitionConfigurer<String, String> processTransition(Transition transition, StateMachineTransitionConfigurer<String, String> transitionConfigurer, ApplicationContext applicationContext) throws Exception{
         ExternalTransition externalTransition = (ExternalTransition) transition;
 
-        Object actions = applicationContext.getBean(LibAction.class);
+        Object actions = applicationContext.getBeansOfType(LibAction.class);
 
         List<Method> actionMethods = getMethod(actions);
 

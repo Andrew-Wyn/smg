@@ -9,6 +9,7 @@ import com.statemachinegenerator.smg.plugins.model.TransitionTypeInterface;
 import org.springframework.context.ApplicationContext;
 import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
+import org.springframework.statemachine.config.configurers.InternalTransitionConfigurer;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -37,14 +38,22 @@ public class InternalTransitionPlugin implements TransitionTypeInterface {
         Method action = actionMethods.stream().filter(m -> m.getName().equals(internalTransition.getAction())).findFirst().orElse(null);
         Method errorAction = actionMethods.stream().filter(m -> m.getName().equals(internalTransition.getErrorAction())).findFirst().orElse(null);
 
-        return transitionConfigurer
-                .withInternal()
-                .source(internalTransition.getSource())
-                .timerOnce(internalTransition.getTimer())
-                .action(
-                        Objects.nonNull(action) ? (Action<String, String>)action.invoke(actions) : (ctx) -> {},
-                        Objects.nonNull(errorAction) ? (Action<String, String>)errorAction.invoke(actions) : (ctx) -> {}
-                        )
-                .and();
+        InternalTransitionConfigurer<String, String> internalTransitionConfigurer = transitionConfigurer.withInternal();
+
+        internalTransitionConfigurer = internalTransitionConfigurer.source(internalTransition.getSource());
+
+        internalTransitionConfigurer = internalTransitionConfigurer.source(internalTransition.getSource());
+
+        if(Objects.nonNull(internalTransition.getTimer()))
+            internalTransitionConfigurer = internalTransitionConfigurer.timer(internalTransition.getTimer());
+        if(Objects.nonNull(internalTransition.getTimerOnce()))
+            internalTransitionConfigurer = internalTransitionConfigurer.timerOnce(internalTransition.getTimerOnce());
+
+        internalTransitionConfigurer = internalTransitionConfigurer.action(
+                Objects.nonNull(action) ? (Action<String, String>)action.invoke(actions) : (ctx) -> {},
+                Objects.nonNull(errorAction) ? (Action<String, String>)errorAction.invoke(actions) : (ctx) -> {}
+        );
+
+        return internalTransitionConfigurer.and();
     }
 }

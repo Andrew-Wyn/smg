@@ -1,5 +1,6 @@
 package com.statemachinegenerator.smg.domain;
 
+import com.statemachinegenerator.smg.domain.structures.Region;
 import com.statemachinegenerator.smg.domain.structures.State;
 import com.statemachinegenerator.smg.domain.transitions.Transition;
 import lombok.AllArgsConstructor;
@@ -21,16 +22,20 @@ public class FSMConfiguration {
     @Id
     private String id;
 
+    private String initial;
+    private String end;
     private List<State> states;
     private List<Transition> transitions;
+    private List<Region> regions;
 
     private String machineId;
     private Boolean autoStartUp;
 
-    public FSMConfiguration(List<State> states, List<Transition> transitions, String machineId, Boolean autoStartUp) {
+    public FSMConfiguration(List<State> states, List<Transition> transitions, String machineId, Boolean autoStartUp, List<Region> regions) {
         this.states = states;
         this.transitions = transitions;
         this.machineId = machineId;
         this.autoStartUp = autoStartUp;
+        this.regions = regions;
     }
 }

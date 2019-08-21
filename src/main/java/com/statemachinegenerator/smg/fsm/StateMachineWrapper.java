@@ -24,6 +24,8 @@ public class StateMachineWrapper {
         if(Objects.isNull(stateMachine) || stateMachine.isComplete()){
             stateMachine = stateMachineBuild.buildStateMachine(service.getElement(id));
             stateMachine.start();
+        } else {
+            System.out.println("can't build, another state machine is running ...");
         }
 
     }

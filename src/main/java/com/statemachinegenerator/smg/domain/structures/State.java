@@ -14,5 +14,7 @@ public class State {
 
     private String value;
     private StateTypes type;
+    private String entryAction;
+    private String exitAction;
 
 }
