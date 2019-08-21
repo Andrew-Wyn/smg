@@ -1,9 +1,9 @@
 package com.statemachinegenerator.smg.plugins.plugin;
 
+import com.bmeme.lib.libmethods.LibAction;
 import com.statemachinegenerator.smg.domain.transitions.ExternalTransition;
 import com.statemachinegenerator.smg.domain.transitions.Transition;
-import com.statemachinegenerator.smg.libmethods.LibAction;
-import com.statemachinegenerator.smg.libmethods.LibMethod;
+//import com.statemachinegenerator.smg.libmethods.LibAction;
 import com.statemachinegenerator.smg.plugins.model.TransitionPlugin;
 import com.statemachinegenerator.smg.plugins.model.TransitionTypeInterface;
 import org.springframework.context.ApplicationContext;
@@ -29,9 +29,7 @@ public class ExternalTransitionPlugin implements TransitionTypeInterface {
 
         Object actions = applicationContext.getBean(LibAction.class);
 
-        List<Method> actionMethods = new ArrayList<>();
-
-        Collections.addAll(actionMethods, actions.getClass().getMethods());
+        List<Method> actionMethods = getMethod(actions);
 
         Method action = actionMethods.stream().filter(m -> m.getName().equals(externalTransition.getAction())).findFirst().orElse(null);
         Method errorAction = actionMethods.stream().filter(m -> m.getName().equals(externalTransition.getErrorAction())).findFirst().orElse(null);

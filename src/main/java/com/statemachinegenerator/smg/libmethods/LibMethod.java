@@ -9,6 +9,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME) // disponibile a runtime
 @Documented
 @Indexed
-@Component
+//@Component
 public @interface LibMethod {
+    String value() default "";
 }
