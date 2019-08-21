@@ -1,8 +1,8 @@
 package com.statemachinegenerator.smg.fsm;
 
 import com.statemachinegenerator.smg.domain.FSMConfiguration;
-import com.statemachinegenerator.smg.domain.State;
-import com.statemachinegenerator.smg.domain.Transition;
+import com.statemachinegenerator.smg.domain.structures.State;
+import com.statemachinegenerator.smg.domain.transitions.Transition;
 import com.statemachinegenerator.smg.plugins.model.TransitionPlugin;
 import com.statemachinegenerator.smg.plugins.model.TransitionTypeInterface;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,6 @@ import org.springframework.statemachine.config.configurers.StateConfigurer;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 @Component
@@ -82,7 +81,7 @@ public class StateMachineBuild {
                 TransitionTypeInterface castedPlugin = (TransitionTypeInterface)plugin;
                 System.out.println(transition.getClass());
                 if(castedPlugin.check(transition.getClass())){
-                    transitionConfigurer = castedPlugin.processTransition(transition, transitionConfigurer);
+                    transitionConfigurer = castedPlugin.processTransition(transition, transitionConfigurer, applicationContext);
                     break;
                 }
             }

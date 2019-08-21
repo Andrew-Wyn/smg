@@ -1,4 +1,4 @@
-package com.statemachinegenerator.smg.domain;
+package com.statemachinegenerator.smg.domain.transitions;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.AllArgsConstructor;
@@ -20,10 +20,14 @@ public class InternalTransition implements Transition {
 
     private String source;
     private long timer;
+    private String action;
+    private String errorAction;
 
-    public InternalTransition(String source, long timer){
+    public InternalTransition(String source, long timer, String action, String errorAction){
         this.source = source;
         this.timer = timer;
+        this.action = action;
+        this.errorAction = errorAction;
     }
 
 }

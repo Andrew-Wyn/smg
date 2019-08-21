@@ -1,11 +1,19 @@
 package com.statemachinegenerator.smg.plugins.plugin;
 
-import com.statemachinegenerator.smg.domain.ExternalTransition;
-import com.statemachinegenerator.smg.domain.InternalTransition;
-import com.statemachinegenerator.smg.domain.Transition;
+import com.statemachinegenerator.smg.domain.transitions.InternalTransition;
+import com.statemachinegenerator.smg.domain.transitions.Transition;
+import com.statemachinegenerator.smg.libmethods.LibAction;
 import com.statemachinegenerator.smg.plugins.model.TransitionPlugin;
 import com.statemachinegenerator.smg.plugins.model.TransitionTypeInterface;
+import org.springframework.context.ApplicationContext;
+import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 @TransitionPlugin
 public class InternalTransitionPlugin implements TransitionTypeInterface {
@@ -18,13 +26,26 @@ public class InternalTransitionPlugin implements TransitionTypeInterface {
     }
 
     @Override
-    public StateMachineTransitionConfigurer<String, String> processTransition(Transition transition, StateMachineTransitionConfigurer<String, String> transitionConfigurer) throws Exception{
+    public StateMachineTransitionConfigurer<String, String> processTransition(Transition transition, StateMachineTransitionConfigurer<String, String> transitionConfigurer, ApplicationContext applicationContext) throws Exception{
         InternalTransition internalTransition = (InternalTransition) transition;
+
+        Object actions = applicationContext.getBean(LibAction.class);
+
+        List<Method> actionMethods = new ArrayList<>();
+
+        Collections.addAll(actionMethods, actions.getClass().getMethods());
+
+        Method action = actionMethods.stream().filter(m -> m.getName().equals(internalTransition.getAction())).findFirst().orElse(null);
+        Method errorAction = actionMethods.stream().filter(m -> m.getName().equals(internalTransition.getErrorAction())).findFirst().orElse(null);
 
         return transitionConfigurer
                 .withInternal()
                 .source(internalTransition.getSource())
                 .timerOnce(internalTransition.getTimer())
+                .action(
+                        Objects.nonNull(action) ? (Action<String, String>)action.invoke(actions) : (ctx) -> {},
+                        Objects.nonNull(errorAction) ? (Action<String, String>)errorAction.invoke(actions) : (ctx) -> {}
+                        )
                 .and();
     }
 }

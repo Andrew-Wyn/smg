@@ -1,4 +1,4 @@
-package com.statemachinegenerator.smg.domain;
+package com.statemachinegenerator.smg.domain.structures;
 
 import com.statemachinegenerator.smg.domain.enums.StateTypes;
 import lombok.AllArgsConstructor;

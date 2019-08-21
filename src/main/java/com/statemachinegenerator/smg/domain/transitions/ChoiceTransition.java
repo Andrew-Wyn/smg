@@ -1,6 +1,7 @@
-package com.statemachinegenerator.smg.domain;
+package com.statemachinegenerator.smg.domain.transitions;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.statemachinegenerator.smg.domain.structures.ChoiceState;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,13 +22,14 @@ public class ChoiceTransition implements Transition {
     private String id;
 
     private String source;
-    private String first;
-    private List<String> then;
+    private ChoiceState first;
+    private List<ChoiceState> thens;
     private String last;
 
-    public ChoiceTransition(String source, String first, List<String> then, String last){
+    public ChoiceTransition(String source, ChoiceState first,  List<ChoiceState> thens, String last){
         this.source = source;
         this.first = first;
+        this.thens = thens;
         this.last = last;
     }
 

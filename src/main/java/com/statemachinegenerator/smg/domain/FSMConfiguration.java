@@ -1,13 +1,12 @@
 package com.statemachinegenerator.smg.domain;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.statemachinegenerator.smg.domain.structures.State;
+import com.statemachinegenerator.smg.domain.transitions.Transition;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.util.List;
 
