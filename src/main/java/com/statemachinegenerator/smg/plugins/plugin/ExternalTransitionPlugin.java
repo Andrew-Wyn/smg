@@ -35,6 +35,8 @@ public class ExternalTransitionPlugin implements TransitionTypeInterface {
         Method action = actionMethods.stream().filter(m -> m.getName().equals(externalTransition.getAction())).findFirst().orElse(null);
         Method errorAction = actionMethods.stream().filter(m -> m.getName().equals(externalTransition.getErrorAction())).findFirst().orElse(null);
 
+        // add guard
+
         return transitionConfigurer
                 .withExternal()
                 .source(externalTransition.getSource())
@@ -44,6 +46,7 @@ public class ExternalTransitionPlugin implements TransitionTypeInterface {
                         Objects.nonNull(action) ? (Action<String, String>)action.invoke(actions) : (ctx) -> {},
                         Objects.nonNull(errorAction) ? (Action<String, String>)errorAction.invoke(actions) : (ctx) -> {}
                         )
+                .guard((ctx) -> true)
                 .and();
     }
 }
