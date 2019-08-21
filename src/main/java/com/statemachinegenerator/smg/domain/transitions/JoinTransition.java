@@ -5,21 +5,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 
-@JsonTypeName("external")
-public class ExternalTransition implements Transition {
+@JsonTypeName("join")
+public class JoinTransition {
 
-    private String source;
+    private List<String> sources;
     private String target;
-    private String event;
-    private String action;
-    private String errorAction;
-    private String guard;
 
 }
