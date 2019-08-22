@@ -1,26 +1,28 @@
 package com.statemachinegenerator.smg.fsm;
 
-import com.bmeme.lib.libmethods.LibAction;
+import com.bmeme.lib.libannotation.annotations.LibAction;
 import com.statemachinegenerator.smg.domain.FSMConfiguration;
+import com.statemachinegenerator.smg.domain.structures.MethodInvoke;
 import com.statemachinegenerator.smg.domain.structures.Region;
 import com.statemachinegenerator.smg.domain.structures.State;
 import com.statemachinegenerator.smg.domain.transitions.Transition;
 import com.statemachinegenerator.smg.plugins.model.TransitionPlugin;
 import com.statemachinegenerator.smg.plugins.model.TransitionTypeInterface;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.StateMachineBuilder;
-import org.springframework.statemachine.config.builders.StateMachineConfigurer;
-import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 import org.springframework.statemachine.config.configurers.StateConfigurer;
+import org.springframework.statemachine.support.StateMachineInterceptorAdapter;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.util.*;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class StateMachineBuild {
@@ -42,7 +44,23 @@ public class StateMachineBuild {
         // transictions
         makeTransictions(fsmConfiguration, builder);
 
-        return builder.build();
+        StateMachine<String, String> stateMachine = builder.build();
+
+        stateMachine.getStateMachineAccessor()
+                .doWithRegion(function -> function.addStateMachineInterceptor(
+                        new StateMachineInterceptorAdapter<String, String>() {
+                            @Override
+                            public Exception stateMachineError(StateMachine<String, String> stateMachine1,
+                                                               Exception exception) {
+
+                                log.error(String.format("error occured '{}'", exception.getMessage()));
+
+                                // return null indicating handled error
+                                return null;
+                            }
+                        }));
+
+        return stateMachine;
     }
 
     private void makeConfiguration(FSMConfiguration fsmConfiguration, StateMachineBuilder.Builder<String, String> builder) throws Exception{
@@ -56,24 +74,20 @@ public class StateMachineBuild {
         if(Objects.nonNull(initial))
             stateConfigurer = stateConfigurer.initial(initial);
 
-        Object actions = applicationContext.getBeansOfType(LibAction.class);
+        Collection<Object> actions = applicationContext.getBeansWithAnnotation(LibAction.class).values();
 
-        List<Method> actionMethods = new ArrayList<>();
-
-        Collections.addAll(actionMethods, actions.getClass().getMethods());
-
-        Method entryAction;
-        Method exitAction;
+        MethodInvoke entryAction;
+        MethodInvoke exitAction;
 
         for(State state : states){
 
-            entryAction = actionMethods.stream().filter(m -> m.getName().equals(state.getEntryAction())).findFirst().orElse(null);
-            exitAction = actionMethods.stream().filter(m -> m.getName().equals(state.getExitAction())).findFirst().orElse(null);
+            entryAction = getMethod(actions, state.getEntryAction());
+            exitAction = getMethod(actions, state.getExitAction());
 
             stateConfigurer = stateConfigurer.state(
                     state.getValue(),
-                    Objects.nonNull(entryAction) ? (Action<String, String>)entryAction.invoke(actions) : (ctx) -> {},
-                    Objects.nonNull(exitAction) ? (Action<String, String>)exitAction.invoke(actions) : (ctx) -> {}
+                    Objects.nonNull(entryAction) ? (Action<String, String>)entryAction.getMethod().invoke(entryAction.getObject()) : (ctx) -> {},
+                    Objects.nonNull(exitAction) ? (Action<String, String>)exitAction.getMethod().invoke(exitAction.getObject()) : (ctx) -> {}
                     );
 
             switch(state.getType()){
@@ -121,6 +135,25 @@ public class StateMachineBuild {
                 }
             }
         }
+    }
+
+    public static MethodInvoke getMethod(Collection<Object> libsMethods, String find){
+
+        for(Object libMethods : libsMethods){
+            List<Method> methods = new ArrayList<>();
+            Collections.addAll(methods, libMethods.getClass().getMethods());
+
+            Method out = methods.stream().filter(m -> m.getName().equals(find)).findFirst().orElse(null);
+
+            System.out.println("---->");
+
+            if(Objects.nonNull(out))
+                System.out.println(String.format("---->{}",out));
+                return new MethodInvoke(out, libMethods);
+
+        }
+
+        return null;
     }
 
 }

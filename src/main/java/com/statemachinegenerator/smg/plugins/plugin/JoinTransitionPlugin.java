@@ -4,12 +4,8 @@ import com.statemachinegenerator.smg.domain.transitions.JoinTransition;
 import com.statemachinegenerator.smg.domain.transitions.Transition;
 import com.statemachinegenerator.smg.plugins.model.TransitionPlugin;
 import com.statemachinegenerator.smg.plugins.model.TransitionTypeInterface;
-import org.springframework.cglib.core.CollectionUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
-import org.springframework.statemachine.config.configurers.JoinTransitionConfigurer;
-
-import java.util.Collections;
 
 @TransitionPlugin
 public class JoinTransitionPlugin implements TransitionTypeInterface {

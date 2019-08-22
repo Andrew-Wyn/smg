@@ -1,6 +1,7 @@
 package com.statemachinegenerator.smg.plugins.plugin;
 
-import com.bmeme.lib.libmethods.LibAction;
+import com.bmeme.lib.libannotation.annotations.LibAction;
+import com.statemachinegenerator.smg.domain.structures.MethodInvoke;
 import com.statemachinegenerator.smg.domain.transitions.InternalTransition;
 import com.statemachinegenerator.smg.domain.transitions.Transition;
 //import com.statemachinegenerator.smg.libmethods.LibAction;
@@ -11,11 +12,10 @@ import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 import org.springframework.statemachine.config.configurers.InternalTransitionConfigurer;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
 import java.util.Objects;
+
+import static com.statemachinegenerator.smg.fsm.StateMachineBuild.getMethod;
 
 @TransitionPlugin
 public class InternalTransitionPlugin implements TransitionTypeInterface {
@@ -31,12 +31,10 @@ public class InternalTransitionPlugin implements TransitionTypeInterface {
     public StateMachineTransitionConfigurer<String, String> processTransition(Transition transition, StateMachineTransitionConfigurer<String, String> transitionConfigurer, ApplicationContext applicationContext) throws Exception{
         InternalTransition internalTransition = (InternalTransition) transition;
 
-        Object actions = applicationContext.getBean(LibAction.class);
+        Collection<Object> actions = applicationContext.getBeansWithAnnotation(LibAction.class).values();
 
-        List<Method> actionMethods = getMethod(actions);
-
-        Method action = actionMethods.stream().filter(m -> m.getName().equals(internalTransition.getAction())).findFirst().orElse(null);
-        Method errorAction = actionMethods.stream().filter(m -> m.getName().equals(internalTransition.getErrorAction())).findFirst().orElse(null);
+        MethodInvoke action = getMethod(actions, internalTransition.getAction());
+        MethodInvoke errorAction = getMethod(actions, internalTransition.getErrorAction());
 
         InternalTransitionConfigurer<String, String> internalTransitionConfigurer = transitionConfigurer.withInternal();
 
@@ -50,8 +48,8 @@ public class InternalTransitionPlugin implements TransitionTypeInterface {
             internalTransitionConfigurer = internalTransitionConfigurer.timerOnce(internalTransition.getTimerOnce());
 
         internalTransitionConfigurer = internalTransitionConfigurer.action(
-                Objects.nonNull(action) ? (Action<String, String>)action.invoke(actions) : (ctx) -> {},
-                Objects.nonNull(errorAction) ? (Action<String, String>)errorAction.invoke(actions) : (ctx) -> {}
+                Objects.nonNull(action) ? (Action<String, String>)action.getMethod().invoke(action.getObject()) : (ctx) -> {},
+                Objects.nonNull(errorAction) ? (Action<String, String>)errorAction.getMethod().invoke(action.getObject()) : (ctx) -> {}
         );
 
         return internalTransitionConfigurer.and();

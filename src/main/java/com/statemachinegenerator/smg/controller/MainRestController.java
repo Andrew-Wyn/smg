@@ -18,7 +18,7 @@ public class MainRestController {
 
     @GetMapping(value = "/")
     public String root(){
-        return "finite state machine generator";
+        return "finite state machine generator (ONLINE)";
     }
 
     @GetMapping(value = "/build/{id}")

@@ -1,7 +1,6 @@
 package com.statemachinegenerator.smg.plugins.plugin;
 
 import com.statemachinegenerator.smg.domain.transitions.ForkTransition;
-import com.statemachinegenerator.smg.domain.transitions.JoinTransition;
 import com.statemachinegenerator.smg.domain.transitions.Transition;
 import com.statemachinegenerator.smg.plugins.model.TransitionPlugin;
 import com.statemachinegenerator.smg.plugins.model.TransitionTypeInterface;
@@ -27,9 +26,8 @@ public class ForkTransiotionPlugin implements TransitionTypeInterface {
 
         forkTransitionConfigurer = forkTransitionConfigurer.source(forkTransition.getSource());
 
-        for(String targhet : forkTransition.getTargets()){
-            forkTransitionConfigurer = forkTransitionConfigurer.target(targhet);
-        }
+        for(String target : forkTransition.getTargets())
+            forkTransitionConfigurer = forkTransitionConfigurer.target(target);
 
         return forkTransitionConfigurer.and();
     }

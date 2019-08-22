@@ -24,16 +24,6 @@ public class SmgApplication {
 	public CommandLineRunner commandLineRunner(){
 		return (ctx) -> {
 			log.info("SMG application started");
-			printTitle(ResourceUtils.getFile("classpath:title.txt"));
 		};
 	}
-
-	private static void printTitle(File titleFile) throws IOException {
-		Scanner scanner = new Scanner(titleFile);
-
-		while(scanner.hasNextLine()){
-			System.out.println(scanner.nextLine());
-		}
-	}
-
 }

@@ -1,8 +1,9 @@
 package com.statemachinegenerator.smg.plugins.plugin;
 
-import com.bmeme.lib.libmethods.LibAction;
-import com.bmeme.lib.libmethods.LibGuard;
+import com.bmeme.lib.libannotation.annotations.LibAction;
+import com.bmeme.lib.libannotation.annotations.LibGuard;
 import com.statemachinegenerator.smg.domain.structures.ChoiceState;
+import com.statemachinegenerator.smg.domain.structures.MethodInvoke;
 import com.statemachinegenerator.smg.domain.transitions.ChoiceTransition;
 import com.statemachinegenerator.smg.domain.transitions.Transition;
 //import com.statemachinegenerator.smg.libmethods.LibAction;
@@ -15,13 +16,9 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 import org.springframework.statemachine.config.configurers.ChoiceTransitionConfigurer;
 import org.springframework.statemachine.guard.Guard;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
-// improve
+import static com.statemachinegenerator.smg.fsm.StateMachineBuild.getMethod;
 
 @TransitionPlugin
 public class ChoiceTransitionPlugin implements TransitionTypeInterface {
@@ -37,37 +34,33 @@ public class ChoiceTransitionPlugin implements TransitionTypeInterface {
     public StateMachineTransitionConfigurer<String, String> processTransition(Transition transition, StateMachineTransitionConfigurer<String, String> transitionConfigurer, ApplicationContext applicationContext) throws Exception{
         ChoiceTransition choiceTransition = (ChoiceTransition) transition;
 
+        Collection<Object> actions = applicationContext.getBeansWithAnnotation(LibAction.class).values();
+        Collection<Object> guards = applicationContext.getBeansWithAnnotation(LibGuard.class).values();
 
-        Object actions = applicationContext.getBean(LibAction.class);
-        Object guards = applicationContext.getBean(LibGuard.class);
-
-        List<Method> actionMethods = getMethod(actions);
-        List<Method> guardMethods = getMethod(guards);
-
-        Method action;
-        Method guard;
+        MethodInvoke action;
+        MethodInvoke guard;
 
         ChoiceTransitionConfigurer<String, String> choiceTransitionConfigurer = transitionConfigurer
                 .withChoice()
                 .source(choiceTransition.getSource());
 
-        action = actionMethods.stream().filter(m -> m.getName().equals(choiceTransition.getFirst().getAction())).findFirst().orElse(null);
-        guard = guardMethods.stream().filter(m -> m.getName().equals(choiceTransition.getFirst().getGuard())).findFirst().orElse(null);
+        action = getMethod(actions, choiceTransition.getFirst().getAction());
+        guard = getMethod(guards, choiceTransition.getFirst().getGuard());
 
         choiceTransitionConfigurer = choiceTransitionConfigurer.first(
                 choiceTransition.getFirst().getValue(),
-                Objects.nonNull(action) ? (Guard<String, String>)action.invoke(actions) : (ctx) -> true,
-                Objects.nonNull(guard) ? (Action<String, String>)guard.invoke(actions) : (ctx) -> {}
+                Objects.nonNull(action) ? (Guard<String, String>)action.getMethod().invoke(action.getObject()) : (ctx) -> true,
+                Objects.nonNull(guard) ? (Action<String, String>)guard.getMethod().invoke(guard.getObject()) : (ctx) -> {}
         );
 
         for(ChoiceState then : choiceTransition.getThens()){
-            action = actionMethods.stream().filter(m -> m.getName().equals(then.getAction())).findFirst().orElse(null);
-            guard = guardMethods.stream().filter(m -> m.getName().equals(then.getGuard())).findFirst().orElse(null);
+            action = getMethod(actions, then.getAction());
+            guard = getMethod(guards, then.getGuard());
 
             choiceTransitionConfigurer = choiceTransitionConfigurer.then(
                     then.getValue(),
-                    Objects.nonNull(action) ? (Guard<String, String>)action.invoke(actions) : (ctx) -> true,
-                    Objects.nonNull(guard) ? (Action<String, String>)guard.invoke(actions) : (ctx) -> {}
+                    Objects.nonNull(action) ? (Guard<String, String>)action.getMethod().invoke(action.getObject()) : (ctx) -> true,
+                    Objects.nonNull(guard) ? (Action<String, String>)guard.getMethod().invoke(guard.getObject()) : (ctx) -> {}
             );
         }
 
