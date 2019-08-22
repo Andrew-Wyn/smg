@@ -64,7 +64,7 @@
 			<artifactId>bmeme-lib-libannotation-spring-boot-starter</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 			<scope>system</scope>
-			<systemPath>/home/terraformer/Scrivania/__Cartelle/Work/_work_project/libannotation/build/libs/bmeme-lib-libannotation-spring-boot-starter-1.0.0-SNAPSHOT.jar</systemPath>
+			<systemPath>/home/terraformer/Scrivania/__Cartelle/Work/_work_project/CERERE/libannotation/build/libs/bmeme-lib-libannotation-spring-boot-starter-1.0.0-SNAPSHOT.jar</systemPath>
 		</dependency>
 
 	</dependencies>
