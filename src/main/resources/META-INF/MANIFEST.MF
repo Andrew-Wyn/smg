@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: com.statemachinegenerator.smg.SmgApplication
+Class-Path: /home/terraformer/Scrivania/__Cartelle/Work/_work_project/CERERE/bmeme-lib-libmethods-spring-boot-starter/target/bmeme-lib-libmethods-spring-boot-starter-1.0.0-SNAPSHOT.jar

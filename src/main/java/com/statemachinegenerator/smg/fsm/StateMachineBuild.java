@@ -11,6 +11,7 @@ import com.statemachinegenerator.smg.plugins.model.TransitionTypeInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.StateMachineBuilder;
@@ -145,10 +146,7 @@ public class StateMachineBuild {
 
             Method out = methods.stream().filter(m -> m.getName().equals(find)).findFirst().orElse(null);
 
-            System.out.println("---->");
-
             if(Objects.nonNull(out))
-                System.out.println(String.format("---->{}",out));
                 return new MethodInvoke(out, libMethods);
 
         }
