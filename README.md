@@ -144,4 +144,90 @@ EXAMPLE CONFIGURATIONS:
   }
 ```
 
+- WASHING_MACHINE
+
+```
+{ 
+    "initial" : "RUNNING",
+    "states" : [ 
+      {
+            "value" : "RUNNING", 
+            "type" : "NORMAL"
+      }, 
+      {
+            "value" : "POWEROFF", 
+            "type" : "NORMAL"
+      }
+    ],
+
+    "end" : "END",
+    
+    "regions" : [ 
+      {
+        "parent" : "RUNNING", 
+        "initial" : "WASHING",
+        "states" : [ 
+          {
+            "value" : "WASHING", 
+            "type" : "NORMAL"
+          }, 
+          {
+            "value" : "RISING", 
+            "type" : "NORMAL"
+          },
+          {
+              "value" : "DRYING",
+              "type" : "NORMAL"
+          }
+        ],
+        "historyStates" : [
+            {
+                "value" : "HISTORY",
+                "state" : "SHALLOW"
+            }
+        ]
+      }
+    ],
+    
+    "transitions" : [ 
+      { 
+        "type" : "external",
+        "source" : "WASHING", 
+        "target" : "RISING", 
+        "event" : "RINSE"
+      },
+  
+      { 
+        "type" : "external",
+        "source" : "RISING", 
+        "target" : "DRYING", 
+        "event" : "DRY"
+      },
+      
+      { 
+        "type" : "external",
+        "source" : "RUNNING", 
+        "target" : "POWEROFF", 
+        "event" : "CUTPOWER"
+      },
+      
+      { 
+        "type" : "external",
+        "source" : "POWEROFF", 
+        "target" : "HISTORY", 
+        "event" : "RESTOREPOWER"
+      },
+      
+      { 
+        "type" : "external",
+        "source" : "RUNNING", 
+        "target" : "END", 
+        "event" : "STOP"
+      }
+    ], 
+    "machineId" : "washingMachine", 
+    "autoStartUp" : true
+  }
+```
+
 

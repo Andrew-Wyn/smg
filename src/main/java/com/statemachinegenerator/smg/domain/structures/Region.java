@@ -17,5 +17,5 @@ public class Region {
     private String initial;
     private String end;
     private List<State> states;
-
+    private List<HistoryState> historyStates;
 }

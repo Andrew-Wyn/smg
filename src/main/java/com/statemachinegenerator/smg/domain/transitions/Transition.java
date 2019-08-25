@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = InternalTransition.class, name = "internal"),
         @JsonSubTypes.Type(value = ChoiceTransition.class, name = "choice"),
         @JsonSubTypes.Type(value = ForkTransition.class, name = "fork"),
-        @JsonSubTypes.Type(value = JoinTransition.class, name = "junction")
+        @JsonSubTypes.Type(value = JoinTransition.class, name = "junction"),
+        @JsonSubTypes.Type(value = HistoryTransition.class, name = "history")
 })
 public interface Transition {}

@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ChoiceState {
+public class ChoiceTransitionState {
 
     private String value;
     private String guard;

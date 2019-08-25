@@ -2,12 +2,10 @@ package com.statemachinegenerator.smg.plugins.plugin;
 
 import com.bmeme.lib.libannotation.annotations.LibAction;
 import com.bmeme.lib.libannotation.annotations.LibGuard;
-import com.statemachinegenerator.smg.domain.structures.ChoiceState;
+import com.statemachinegenerator.smg.domain.structures.ChoiceTransitionState;
 import com.statemachinegenerator.smg.domain.structures.MethodInvoke;
 import com.statemachinegenerator.smg.domain.transitions.ChoiceTransition;
 import com.statemachinegenerator.smg.domain.transitions.Transition;
-//import com.statemachinegenerator.smg.libmethods.LibAction;
-//import com.statemachinegenerator.smg.libmethods.LibGuard;
 import com.statemachinegenerator.smg.plugins.model.TransitionPlugin;
 import com.statemachinegenerator.smg.plugins.model.TransitionTypeInterface;
 import org.springframework.context.ApplicationContext;
@@ -53,7 +51,7 @@ public class ChoiceTransitionPlugin implements TransitionTypeInterface {
                 Objects.nonNull(guard) ? (Action<String, String>)guard.getMethod().invoke(guard.getObject()) : (ctx) -> {}
         );
 
-        for(ChoiceState then : choiceTransition.getThens()){
+        for(ChoiceTransitionState then : choiceTransition.getThens()){
             action = getMethod(actions, then.getAction());
             guard = getMethod(guards, then.getGuard());
 

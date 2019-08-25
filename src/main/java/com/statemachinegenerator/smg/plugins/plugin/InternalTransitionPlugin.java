@@ -4,7 +4,6 @@ import com.bmeme.lib.libannotation.annotations.LibAction;
 import com.statemachinegenerator.smg.domain.structures.MethodInvoke;
 import com.statemachinegenerator.smg.domain.transitions.InternalTransition;
 import com.statemachinegenerator.smg.domain.transitions.Transition;
-//import com.statemachinegenerator.smg.libmethods.LibAction;
 import com.statemachinegenerator.smg.plugins.model.TransitionPlugin;
 import com.statemachinegenerator.smg.plugins.model.TransitionTypeInterface;
 import org.springframework.context.ApplicationContext;

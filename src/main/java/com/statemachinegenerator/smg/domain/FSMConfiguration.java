@@ -1,5 +1,6 @@
 package com.statemachinegenerator.smg.domain;
 
+import com.statemachinegenerator.smg.domain.structures.HistoryState;
 import com.statemachinegenerator.smg.domain.structures.Region;
 import com.statemachinegenerator.smg.domain.structures.State;
 import com.statemachinegenerator.smg.domain.transitions.Transition;
@@ -24,6 +25,7 @@ public class FSMConfiguration {
 
     private String initial;
     private String end;
+    private List<HistoryState> historyStates;
     private List<State> states;
     private List<Transition> transitions;
     private List<Region> regions;

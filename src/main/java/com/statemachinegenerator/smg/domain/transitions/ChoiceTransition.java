@@ -1,12 +1,11 @@
 package com.statemachinegenerator.smg.domain.transitions;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.statemachinegenerator.smg.domain.structures.ChoiceState;
+import com.statemachinegenerator.smg.domain.structures.ChoiceTransitionState;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 
 import java.util.List;
 
@@ -19,8 +18,8 @@ import java.util.List;
 public class ChoiceTransition implements Transition {
 
     private String source;
-    private ChoiceState first;
-    private List<ChoiceState> thens;
+    private ChoiceTransitionState first;
+    private List<ChoiceTransitionState> thens;
     private String last;
 
 }

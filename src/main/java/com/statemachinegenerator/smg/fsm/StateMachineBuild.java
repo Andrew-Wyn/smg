@@ -2,6 +2,7 @@ package com.statemachinegenerator.smg.fsm;
 
 import com.bmeme.lib.libannotation.annotations.LibAction;
 import com.statemachinegenerator.smg.domain.FSMConfiguration;
+import com.statemachinegenerator.smg.domain.structures.HistoryState;
 import com.statemachinegenerator.smg.domain.structures.MethodInvoke;
 import com.statemachinegenerator.smg.domain.structures.Region;
 import com.statemachinegenerator.smg.domain.structures.State;
@@ -37,7 +38,7 @@ public class StateMachineBuild {
         makeConfiguration(fsmConfiguration, builder);
 
         // states
-        makeStates(fsmConfiguration.getInitial(), fsmConfiguration.getEnd(), fsmConfiguration.getStates(), builder.configureStates().withStates());
+        makeStates(fsmConfiguration.getInitial(), fsmConfiguration.getEnd(), fsmConfiguration.getStates(), fsmConfiguration.getHistoryStates(), builder.configureStates().withStates());
 
         //regions
         makeRegions(fsmConfiguration, builder);
@@ -71,7 +72,7 @@ public class StateMachineBuild {
                 .listener(new StateMachineEventListener());
     }
 
-    private void makeStates(String initial, String end, List<State> states, StateConfigurer<String, String> stateConfigurer) throws Exception{
+    private void makeStates(String initial, String end, List<State> states, List<HistoryState> historyStates, StateConfigurer<String, String> stateConfigurer) throws Exception{
         if(Objects.nonNull(initial))
             stateConfigurer = stateConfigurer.initial(initial);
 
@@ -104,8 +105,14 @@ public class StateMachineBuild {
             }
         }
 
+        if(Objects.nonNull(historyStates)) {
+            for (HistoryState historyState : historyStates)
+                stateConfigurer = stateConfigurer.history(historyState.getValue(), StateConfigurer.History.valueOf(historyState.getState().name()));
+        }
+
+
         if(Objects.nonNull(end))
-            stateConfigurer.initial(end);
+            stateConfigurer.end(end);
     }
 
     private void makeRegions(FSMConfiguration fsmConfiguration, StateMachineBuilder.Builder<String, String> builder) throws Exception{
@@ -116,7 +123,7 @@ public class StateMachineBuild {
 
             stateConfigurer = stateConfigurer.parent(region.getParent());
 
-            makeStates(region.getInitial(), region.getEnd(), region.getStates(), stateConfigurer);
+            makeStates(region.getInitial(), region.getEnd(), region.getStates(), region.getHistoryStates(), stateConfigurer);
 
         }
     }
@@ -129,8 +136,8 @@ public class StateMachineBuild {
         for(Transition transition : fsmConfiguration.getTransitions()){
             for(Object plugin : plugins){
                 TransitionTypeInterface castedPlugin = (TransitionTypeInterface)plugin;
-                System.out.println(transition.getClass());
                 if(castedPlugin.check(transition.getClass())){
+                    System.out.println(transition.getClass());
                     transitionConfigurer = castedPlugin.processTransition(transition, transitionConfigurer, applicationContext);
                     break;
                 }
