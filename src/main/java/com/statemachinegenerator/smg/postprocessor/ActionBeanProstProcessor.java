@@ -1,12 +1,15 @@
 package com.statemachinegenerator.smg.postprocessor;
 
+import com.bmeme.lib.libannotation.annotations.LibAction;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
-public class ActionBeanProstProcessor implements BeanPostProcessor {
+@Component
+public class ActionBeanProstProcessor {} /*implements BeanPostProcessor {
 
     private ConfigurableListableBeanFactory configurableBeanFactory;
 
@@ -18,7 +21,7 @@ public class ActionBeanProstProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName)
             throws BeansException {
-        this.scanDataAccessAnnotation(bean, beanName);
+        this.scanLibActionAnnotation(bean, beanName);
         return bean;
     }
 
@@ -28,7 +31,7 @@ public class ActionBeanProstProcessor implements BeanPostProcessor {
         return bean;
     }
 
-    protected void scanDataAccessAnnotation(Object bean, String beanName) {
+    protected void scanLibActionAnnotation(Object bean, String beanName) {
         this.configureFieldInjection(bean);
     }
 
@@ -38,4 +41,4 @@ public class ActionBeanProstProcessor implements BeanPostProcessor {
                 new ActionFieldCallback(configurableBeanFactory, bean);
         ReflectionUtils.doWithFields(managedBeanClass, fieldCallback);
     }
-}
+}*/

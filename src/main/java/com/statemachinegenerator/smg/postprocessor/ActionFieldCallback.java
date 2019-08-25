@@ -1,6 +1,7 @@
 package com.statemachinegenerator.smg.postprocessor;
 
 import com.bmeme.lib.libannotation.annotations.LibAction;
+import com.bmeme.lib.libannotation.annotations.LibGuard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -12,7 +13,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-public class ActionFieldCallback implements ReflectionUtils.FieldCallback {
+public class ActionFieldCallback {} /*implements ReflectionUtils.FieldCallback {
     private static Logger logger = LoggerFactory.getLogger(ActionFieldCallback.class);
 
     private static int AUTOWIRE_MODE = AutowireCapableBeanFactory.AUTOWIRE_BY_NAME;
@@ -35,14 +36,14 @@ public class ActionFieldCallback implements ReflectionUtils.FieldCallback {
     @Override
     public void doWith(Field field)
             throws IllegalArgumentException, IllegalAccessException {
-        if (!field.isAnnotationPresent(LibAction.class)) {
+        if (!field.isAnnotationPresent(LibAction.class) && !field.isAnnotationPresent(LibGuard.class)) {
             return;
         }
+        System.out.println("-------------------------->" + field.getName());
         ReflectionUtils.makeAccessible(field);
         Type fieldGenericType = field.getGenericType();
-        // In this example, get actual "GenericDAO' type.
         Class<?> generic = field.getType();
-        Class<?> classValue = field.getDeclaredAnnotation(LibAction.class).entity();
+        Class<?> classValue = field.isAnnotationPresent(LibAction.class) ? field.getDeclaredAnnotation(LibAction.class).entity() : field.getDeclaredAnnotation(LibGuard.class).entity();
 
         if (genericTypeIsValid(classValue, fieldGenericType)) {
             String beanName = classValue.getSimpleName() + generic.getSimpleName();
@@ -73,8 +74,8 @@ public class ActionFieldCallback implements ReflectionUtils.FieldCallback {
 
             Object toRegister = null;
             try {
-                Constructor<?> ctr = genericClass.getConstructor(Class.class);
-                toRegister = ctr.newInstance(paramClass);
+                Constructor<?> ctr = genericClass.getConstructor();
+                toRegister = ctr.newInstance();
             } catch (Exception e) {
                 logger.error(ERROR_CREATE_INSTANCE, genericClass.getTypeName(), e);
                 throw new RuntimeException(e);
@@ -91,5 +92,5 @@ public class ActionFieldCallback implements ReflectionUtils.FieldCallback {
         }
         return daoInstance;
     }
-}
+}*/
 
