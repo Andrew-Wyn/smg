@@ -31,3 +31,6 @@ build/
 .vscode/
 
 .cache/
+
+
+gitpush.sh
