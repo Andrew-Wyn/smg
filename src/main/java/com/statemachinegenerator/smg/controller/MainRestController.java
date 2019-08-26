@@ -30,9 +30,4 @@ public class MainRestController {
     public void fire(@PathVariable(value = "event") String event) throws Exception{
         stateMachineWrapper.fire(event);
     }
-
-    @PostMapping(value = "/create")
-    public void create(@RequestBody final FSMConfiguration fsmConfiguration){
-        fsmConfigurationService.addElement(fsmConfiguration);
-    }
 }

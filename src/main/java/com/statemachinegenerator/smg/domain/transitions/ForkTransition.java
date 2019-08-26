@@ -16,6 +16,8 @@ import java.util.List;
 @JsonTypeName("fork")
 public class ForkTransition {
 
+    // necessario per la serializzazione e deserializzazione
+    private String type = "fork";
     private String source;
     private List<String> targets;
 

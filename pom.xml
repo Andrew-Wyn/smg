@@ -18,6 +18,14 @@
 		<java.version>1.8</java.version>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>bmeme-nexus-maven</id>
+			<name>BMEME Repository</name>
+			<url>https://nexus.bmeme.cloud/repository/maven/</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -60,20 +68,34 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter</artifactId>
-			<version>2.0.0.RELEASE</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-actuator</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.9.2</version>
 		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.bmeme.lib</groupId>
+			<artifactId>bmeme-lib-error-spring-boot-starter</artifactId>
+			<version>2.2.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.bmeme.lib</groupId>
+			<artifactId>bmeme-lib-rest-spring-boot-starter</artifactId>
+			<version>3.0-alpha1-mongo</version>
+		</dependency>
+
 
 		<!-- MAVEN LOCAL -->
 

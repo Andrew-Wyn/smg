@@ -1,6 +1,5 @@
 package com.statemachinegenerator.smg;
 
-import com.statemachinegenerator.smg.postprocessor.WatchDir;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -20,9 +19,6 @@ public class SmgApplication {
 	public CommandLineRunner commandLineRunner(){
 		return (ctx) -> {
 			log.info("SMG application started");
-			try{
-				new WatchDir();
-			} catch (Exception e) {}
 		};
 	}
 

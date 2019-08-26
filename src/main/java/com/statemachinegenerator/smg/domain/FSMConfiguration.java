@@ -1,5 +1,6 @@
 package com.statemachinegenerator.smg.domain;
 
+import com.bmeme.lib.rest.domain.entity.BaseEntity;
 import com.statemachinegenerator.smg.domain.structures.HistoryState;
 import com.statemachinegenerator.smg.domain.structures.Region;
 import com.statemachinegenerator.smg.domain.structures.State;
@@ -18,7 +19,7 @@ import static java.util.Objects.requireNonNull;
 @NoArgsConstructor
 @Getter
 @Setter
-public class FSMConfiguration {
+public class FSMConfiguration extends BaseEntity<FSMConfiguration> {
 
     @Id
     private String id;

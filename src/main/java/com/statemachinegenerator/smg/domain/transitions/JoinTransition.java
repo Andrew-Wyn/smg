@@ -16,6 +16,8 @@ import java.util.List;
 @JsonTypeName("join")
 public class JoinTransition {
 
+    // necessario per la serializzazione e deserializzazione
+    private String type = "join";
     private List<String> sources;
     private String target;
 

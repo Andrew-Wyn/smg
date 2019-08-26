@@ -14,6 +14,8 @@ import lombok.Setter;
 @JsonTypeName("history")
 public class HistoryTransition {
 
+    // necessario per la serializzazione e deserializzazione
+    private String type = "history";
     private String source;
     private String target;
 
