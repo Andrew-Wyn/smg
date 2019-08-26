@@ -3,7 +3,7 @@ if [ -f "$FILE" ];
     then
 	    echo "\nALREADY INSTALLED\n"
     else
-	    mvn install:install-file -Dfile=lsrc/main/resource/sib/annotation/bmeme-lib-libannotation-spring-boot-starter-1.0.0-SNAPSHOT.jar -DgroupId=com.bmeme.lib -DartifactId=bmeme-lib-libannotation-spring-boot-starter -Dversion=1.0.0-SNAPSHOT -Dpackaging=jar
+	    mvn install:install-file -Dfile=lsrc/main/resource/lib/annotation/bmeme-lib-libannotation-spring-boot-starter-1.0.0-SNAPSHOT.jar -DgroupId=com.bmeme.lib -DartifactId=bmeme-lib-libannotation-spring-boot-starter -Dversion=1.0.0-SNAPSHOT -Dpackaging=jar
         echo "\nINSTALLED LIBRARY\n"
 
     fi

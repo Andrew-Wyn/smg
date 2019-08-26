@@ -9,6 +9,10 @@ import lombok.Setter;
 
 import java.util.List;
 
+/*
+    TIP: Junction and Choice transition/state have the same behaviour
+ */
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

@@ -58,6 +58,7 @@ public class StateMachineEventListener
 
     @Override
     public void stateMachineError(StateMachine<String, String> stateMachine, Exception exception) {
+        log.error("an error has occurred -> " + exception.getMessage());
     }
 
     @Override

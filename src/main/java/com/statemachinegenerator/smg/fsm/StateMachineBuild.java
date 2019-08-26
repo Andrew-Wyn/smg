@@ -48,20 +48,6 @@ public class StateMachineBuild {
 
         StateMachine<String, String> stateMachine = builder.build();
 
-        stateMachine.getStateMachineAccessor()
-                .doWithRegion(function -> function.addStateMachineInterceptor(
-                        new StateMachineInterceptorAdapter<String, String>() {
-                            @Override
-                            public Exception stateMachineError(StateMachine<String, String> stateMachine1,
-                                                               Exception exception) {
-
-                                log.error(String.format("error occured '{}'", exception.getMessage()));
-
-                                // return null indicating handled error
-                                return null;
-                            }
-                        }));
-
         return stateMachine;
     }
 
@@ -73,6 +59,7 @@ public class StateMachineBuild {
     }
 
     private void makeStates(String initial, String end, List<State> states, List<HistoryState> historyStates, StateConfigurer<String, String> stateConfigurer) throws Exception{
+        // gestire un initial nullo
         if(Objects.nonNull(initial))
             stateConfigurer = stateConfigurer.initial(initial);
 
@@ -81,27 +68,35 @@ public class StateMachineBuild {
         MethodInvoke entryAction;
         MethodInvoke exitAction;
 
-        for(State state : states){
+        if(Objects.nonNull(states)) {
+            for (State state : states) {
 
-            entryAction = getMethod(actions, state.getEntryAction());
-            exitAction = getMethod(actions, state.getExitAction());
+                entryAction = getMethod(actions, state.getEntryAction());
+                exitAction = getMethod(actions, state.getExitAction());
 
-            stateConfigurer = stateConfigurer.state(
-                    state.getValue(),
-                    Objects.nonNull(entryAction) ? (Action<String, String>)entryAction.getMethod().invoke(entryAction.getObject()) : (ctx) -> {},
-                    Objects.nonNull(exitAction) ? (Action<String, String>)exitAction.getMethod().invoke(exitAction.getObject()) : (ctx) -> {}
-                    );
+                stateConfigurer = stateConfigurer.state(
+                        state.getValue(),
+                        Objects.nonNull(entryAction) ? (Action<String, String>) entryAction.getMethod().invoke(entryAction.getObject()) : (ctx) -> {
+                        },
+                        Objects.nonNull(exitAction) ? (Action<String, String>) exitAction.getMethod().invoke(exitAction.getObject()) : (ctx) -> {
+                        }
+                );
 
-            switch(state.getType()){
-                case CHOICE:
-                    stateConfigurer = stateConfigurer.choice(state.getValue()); break;
-                case JUNCTION:
-                    stateConfigurer = stateConfigurer.junction(state.getValue()); break;
-                case FORK:
-                    stateConfigurer = stateConfigurer.fork(state.getValue()); break;
-                case JOIN:
-                    stateConfigurer = stateConfigurer.join(state.getValue()); break;
+                switch (state.getType()) {
+                    case CHOICE:
+                        stateConfigurer = stateConfigurer.choice(state.getValue());
+                        break;
+                    case JUNCTION:
+                        stateConfigurer = stateConfigurer.junction(state.getValue());
+                        break;
+                    case FORK:
+                        stateConfigurer = stateConfigurer.fork(state.getValue());
+                        break;
+                    case JOIN:
+                        stateConfigurer = stateConfigurer.join(state.getValue());
+                        break;
 
+                }
             }
         }
 
@@ -119,13 +114,16 @@ public class StateMachineBuild {
 
         StateConfigurer<String, String> stateConfigurer = builder.configureStates().withStates();
 
-        for(Region region : fsmConfiguration.getRegions()){
+        if(Objects.nonNull(fsmConfiguration.getRegions())){
+            for(Region region : fsmConfiguration.getRegions()){
 
-            stateConfigurer = stateConfigurer.parent(region.getParent());
+                stateConfigurer = stateConfigurer.parent(region.getParent());
 
-            makeStates(region.getInitial(), region.getEnd(), region.getStates(), region.getHistoryStates(), stateConfigurer);
+                makeStates(region.getInitial(), region.getEnd(), region.getStates(), region.getHistoryStates(), stateConfigurer);
 
+            }
         }
+
     }
 
     private void makeTransictions(FSMConfiguration fsmConfiguration, StateMachineBuilder.Builder<String, String> builder) throws Exception{
@@ -133,13 +131,15 @@ public class StateMachineBuild {
 
         Collection<Object> plugins = applicationContext.getBeansWithAnnotation(TransitionPlugin.class).values();
 
-        for(Transition transition : fsmConfiguration.getTransitions()){
-            for(Object plugin : plugins){
-                TransitionTypeInterface castedPlugin = (TransitionTypeInterface)plugin;
-                if(castedPlugin.check(transition.getClass())){
-                    System.out.println(transition.getClass());
-                    transitionConfigurer = castedPlugin.processTransition(transition, transitionConfigurer, applicationContext);
-                    break;
+        if(Objects.nonNull(fsmConfiguration.getTransitions())) {
+            for (Transition transition : fsmConfiguration.getTransitions()) {
+                for (Object plugin : plugins) {
+                    TransitionTypeInterface castedPlugin = (TransitionTypeInterface) plugin;
+                    if (castedPlugin.check(transition.getClass())) {
+                        System.out.println(transition.getClass());
+                        transitionConfigurer = castedPlugin.processTransition(transition, transitionConfigurer, applicationContext);
+                        break;
+                    }
                 }
             }
         }
