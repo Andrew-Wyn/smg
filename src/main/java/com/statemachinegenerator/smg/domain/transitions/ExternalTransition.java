@@ -15,8 +15,6 @@ import org.springframework.data.annotation.Id;
 @JsonTypeName("external")
 public class ExternalTransition implements Transition {
 
-    // necessario per la serializzazione e deserializzazione
-    private String type = "external";
     private String source;
     private String target;
     private String event;

@@ -56,8 +56,8 @@ public class LibBeanLoader {
     private ClassPathScanningCandidateComponentProvider createComponentScanner() {
 
         // Don't pull default filters (@Component, etc.):
-        ClassPathScanningCandidateComponentProvider provider
-                = new ClassPathScanningCandidateComponentProvider(false);
+        ClassPathScanningCandidateComponentProvider provider =
+                new ClassPathScanningCandidateComponentProvider(false);
         provider.addIncludeFilter(new AnnotationTypeFilter(LibAction.class));
         provider.addIncludeFilter(new AnnotationTypeFilter(LibGuard.class));
         return provider;

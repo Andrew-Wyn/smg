@@ -15,12 +15,11 @@ import org.springframework.data.annotation.Id;
 @JsonTypeName("internal")
 public class InternalTransition implements Transition {
 
-    // necessario per la serializzazione e deserializzazione
-    private String type = "internal";
     private String source;
     private Long timer;
     private Long timerOnce;
     private String action;
     private String errorAction;
+    private String event;
 
 }

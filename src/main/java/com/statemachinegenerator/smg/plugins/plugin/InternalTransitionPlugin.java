@@ -45,6 +45,8 @@ public class InternalTransitionPlugin implements TransitionTypeInterface {
             internalTransitionConfigurer = internalTransitionConfigurer.timer(internalTransition.getTimer());
         if(Objects.nonNull(internalTransition.getTimerOnce()))
             internalTransitionConfigurer = internalTransitionConfigurer.timerOnce(internalTransition.getTimerOnce());
+        if(Objects.nonNull(internalTransition.getEvent()))
+            internalTransitionConfigurer = internalTransitionConfigurer.event(internalTransition.getEvent());
 
         internalTransitionConfigurer = internalTransitionConfigurer.action(
                 Objects.nonNull(action) ? (Action<String, String>)action.getMethod().invoke(action.getObject()) : (ctx) -> {},

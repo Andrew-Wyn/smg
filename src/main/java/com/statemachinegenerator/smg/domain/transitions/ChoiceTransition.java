@@ -21,8 +21,6 @@ import java.util.List;
 @JsonTypeName("choice")
 public class ChoiceTransition implements Transition {
 
-    // necessario per la serializzazione e deserializzazione
-    private String type = "choice";
     private String source;
     private ChoiceTransitionState first;
     private List<ChoiceTransitionState> thens;

@@ -19,4 +19,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = JoinTransition.class, name = "junction"),
         @JsonSubTypes.Type(value = HistoryTransition.class, name = "history")
 })
-public interface Transition {}
+public interface Transition {
+    //String getType();
+}

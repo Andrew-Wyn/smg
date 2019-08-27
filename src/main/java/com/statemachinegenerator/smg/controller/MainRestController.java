@@ -1,6 +1,5 @@
 package com.statemachinegenerator.smg.controller;
 
-import com.statemachinegenerator.smg.domain.FSMConfiguration;
 import com.statemachinegenerator.smg.fsm.StateMachineWrapper;
 import com.statemachinegenerator.smg.service.FSMConfigurationService;
 import lombok.RequiredArgsConstructor;
