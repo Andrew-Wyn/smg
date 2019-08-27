@@ -1,0 +1,78 @@
+version: '3.4'
+services:
+
+  app:
+    image: maven:3.6.1-jdk-11-slim
+    entrypoint: /bin/sleep infinity
+    working_dir: /usr/src/app/
+    volumes:
+      - "../:/usr/src/app"
+    ports:
+      - "8090:8080"
+    environment:
+      - DB_HOST=database
+      - DB_PORT=27017
+      - DB_USER=$DB_USER
+      - DB_PASS=$DB_PASS
+      - DB_NAME=$DB_NAME
+      - DNSDOCK_ALIAS=$WEBSERVER
+      - VIRTUAL_PORT=8080
+      - VIRTUAL_HOST=$WEBSERVER
+      - MAVEN_CONFIG=/usr/src/app/.cache/.m2
+      - TERM=xterm-256color
+    depends_on:
+      - database
+    links:
+      - database:database
+
+#  database:
+#    image: bitnami/mongodb:4.0.9
+#    environment:
+#      - MONGODB_ROOT_USERNAME=$DB_ROOT_USER
+#      - MONGODB_ROOT_PASSWORD=$DB_ROOT_PASS
+#      - MONGODB_DISABLE_SYSTEM_LOG=no
+#      - MONGODB_SYSTEM_LOG_VERBOSITY=0
+#      - MONGODB_USERNAME=$DB_USER
+#      - MONGODB_PASSWORD=$DB_PASS
+#      - MONGODB_DATABASE=$DB_NAME
+#      - DNSDOCK_ALIAS=$DBSERVER
+#    volumes:
+#      - "./config/database:/docker-entrypoint-initdb.d"
+#      - "./config/dumps:/docker-dumps"
+#    expose:
+#      - 27017
+#    ports:
+#      - "27018:27017"
+
+
+  database:
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$DB_ROOT_USER
+      - MONGO_INITDB_ROOT_PASSWORD=$DB_ROOT_PASS
+      - MONGO_INITDB_DATABASE=$DB_NAME
+      - MONGO_NON_ROOT_USERNAME=$DB_USER
+      - MONGO_NON_ROOT_PASSWORD=$DB_PASS
+
+    volumes:
+      - "./config/database:/docker-entrypoint-initdb.d"
+      - "./config/dumps:/docker-dumps"
+    ports:
+      - "27018:27017"
+
+  mongo-express:
+    image: mongo-express:0.49.0
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=$DB_ROOT_USER
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=$DB_ROOT_PASS
+      - ME_CONFIG_MONGODB_SERVER=database
+      - ME_CONFIG_MONGODB_AUTH_USERNAME=$DB_USER
+      - ME_CONFIG_MONGODB_AUTH_PASSWORD=$DB_PASS
+      - ME_CONFIG_MONGODB_AUTH_DATABASE=$DB_NAME
+      #- ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - ME_CONFIG_OPTIONS_EDITORTHEME=ambiance
+      - DNSDOCK_ALIAS=$DBMNGTSERVER
+    depends_on:
+      - database
+    ports:
+      - "27091:8081"

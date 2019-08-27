@@ -1,0 +1,4 @@
+FROM mongo
+
+COPY .bmeme/config/database/00_import.sh /docker-entrypoint-initdb.d
+COPY .bmeme/config/dumps /docker-dumps

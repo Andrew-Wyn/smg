@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -e
+QUOTEDCMD=()
+for token in "$@"; do
+  QUOTEDCMD+=($(printf "%q" "$token"))
+done
+CMD="${QUOTEDCMD[*]}"
+if [[ -z "$CMD" ]]
+then
+  CMD="bash"
+fi
+
+if [[ -t 1 ]] ; then OPTS=""; else OPTS="-T"; fi
+
+docker-compose exec ${OPTS} app \
+    /bin/bash -c "${CMD}"
+
