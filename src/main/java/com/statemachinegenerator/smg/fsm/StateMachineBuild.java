@@ -12,13 +12,11 @@ import com.statemachinegenerator.smg.plugins.model.TransitionTypeInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.StateMachineBuilder;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 import org.springframework.statemachine.config.configurers.StateConfigurer;
-import org.springframework.statemachine.support.StateMachineInterceptorAdapter;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;

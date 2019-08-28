@@ -1,6 +1,5 @@
 package com.statemachinegenerator.smg.fsm;
 
-import com.statemachinegenerator.smg.domain.FSMConfiguration;
 import com.statemachinegenerator.smg.service.FSMConfigurationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.statemachine.StateMachine;

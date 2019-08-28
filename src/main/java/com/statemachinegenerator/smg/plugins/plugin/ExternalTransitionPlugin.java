@@ -13,7 +13,8 @@ import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 import org.springframework.statemachine.guard.Guard;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Objects;
 
 import static com.statemachinegenerator.smg.fsm.StateMachineBuild.getMethod;
 

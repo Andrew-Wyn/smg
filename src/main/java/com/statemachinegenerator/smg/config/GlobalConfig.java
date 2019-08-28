@@ -1,8 +1,7 @@
 package com.statemachinegenerator.smg.config;
 
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @Configuration

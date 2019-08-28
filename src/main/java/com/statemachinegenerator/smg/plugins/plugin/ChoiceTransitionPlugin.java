@@ -14,7 +14,8 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 import org.springframework.statemachine.config.configurers.ChoiceTransitionConfigurer;
 import org.springframework.statemachine.guard.Guard;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Objects;
 
 import static com.statemachinegenerator.smg.fsm.StateMachineBuild.getMethod;
 
