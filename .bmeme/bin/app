@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# '$@' is all of the parameters passed to the script.
+
 set -e
 QUOTEDCMD=()
 for token in "$@"; do
