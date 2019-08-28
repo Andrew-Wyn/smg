@@ -33,12 +33,11 @@ services:
       - MONGO_INITDB_DATABASE=$DB_NAME
       - MONGO_NON_ROOT_USERNAME=$DB_USER
       - MONGO_NON_ROOT_PASSWORD=$DB_PASS
-
     volumes:
       - "./config/database:/docker-entrypoint-initdb.d"
       - "./config/dumps:/docker-dumps"
     ports:
-      - "27018:27017"
+      - "$DB_PORT:27017"
 
   mongo-express:
     image: mongo-express:0.49.0

@@ -1,8 +1,10 @@
 .PHONY: requirements compose destroy start stop clean build create-jar publish-jar run debug test test-debug
 
 MVN=./cmvn
+APP=./.bmeme/bin/app
 
 -include Makefile.local
+-include .env
 
 all: requirements destroy compose
 
@@ -51,20 +53,13 @@ install:
 	@echo "\nINSTALLED LIBRARY\n"
  
 
-run:
+app:
 	@echo "========= build main project"
 	${MVN} clean package -DskipTests
 	@echo "========= DONE"
 	@echo "========= LAUNCH"
-	./.bmeme/bin/app java -Dloader.path=src/main/resources/lib/action_guard/ -jar ./target/smg-0.0.1-SNAPSHOT.jar
+	${APP} java -Dloader.path=src/main/resources/lib/action_guard/ -jar ./target/smg-0.0.1-SNAPSHOT.jar
 
-
-debug:
-	${MVN} spring-boot:run -Dspring-boot.run.profiles=docker
-
-test:
-	${MVN} test 
-
-test-debug:
-	${MVN} test -X
-
+database:
+	@echo "========= MONGO SHELL"
+	docker-compose exec database mongo -u ${DB_USER} -p ${DB_PASS}
