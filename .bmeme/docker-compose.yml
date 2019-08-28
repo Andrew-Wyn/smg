@@ -25,26 +25,6 @@ services:
     links:
       - database:database
 
-#  database:
-#    image: bitnami/mongodb:4.0.9
-#    environment:
-#      - MONGODB_ROOT_USERNAME=$DB_ROOT_USER
-#      - MONGODB_ROOT_PASSWORD=$DB_ROOT_PASS
-#      - MONGODB_DISABLE_SYSTEM_LOG=no
-#      - MONGODB_SYSTEM_LOG_VERBOSITY=0
-#      - MONGODB_USERNAME=$DB_USER
-#      - MONGODB_PASSWORD=$DB_PASS
-#      - MONGODB_DATABASE=$DB_NAME
-#      - DNSDOCK_ALIAS=$DBSERVER
-#    volumes:
-#      - "./config/database:/docker-entrypoint-initdb.d"
-#      - "./config/dumps:/docker-dumps"
-#    expose:
-#      - 27017
-#    ports:
-#      - "27018:27017"
-
-
   database:
     image: mongo
     environment:
@@ -69,7 +49,6 @@ services:
       - ME_CONFIG_MONGODB_AUTH_USERNAME=$DB_USER
       - ME_CONFIG_MONGODB_AUTH_PASSWORD=$DB_PASS
       - ME_CONFIG_MONGODB_AUTH_DATABASE=$DB_NAME
-      #- ME_CONFIG_MONGODB_ENABLE_ADMIN=true
       - ME_CONFIG_OPTIONS_EDITORTHEME=ambiance
       - DNSDOCK_ALIAS=$DBMNGTSERVER
     depends_on:

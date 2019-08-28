@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-mongo -u ${MONGO_INITDB_ROOT_USERNAME} -p ${MONGO_INITDB_ROOT_PASSWORD} --eval "db.createUser({user:\"cerere\", pwd:\"cerere\", roles:[{ role: \"userAdmin\", db: \"cerere\" }]})"
+#create user for cerere database
+mongo -u ${MONGO_INITDB_ROOT_USERNAME} -p ${MONGO_INITDB_ROOT_PASSWORD} --eval "db = db.getSiblingDB('admin'); db.createUser({user:\"cerere\", pwd:\"cerere\", roles:[{ role: \"root\", db: \"admin\" }, {role:\"dbOwner\", db:\"cerere\"}]}); db.auth(\"cerere\", \"cerere\"); db.grantRolesToUser(\"cerere\", [ { role: \"readWrite\", db: \"cerere\" } ])"
+mongo -u ${MONGO_INITDB_ROOT_USERNAME} -p ${MONGO_INITDB_ROOT_PASSWORD} --eval "db = db.getSiblingDB('cerere'); db.createUser({user:\"cerere\", pwd:\"cerere\", roles:[{ role: \"readWrite\", db: \"cerere\" }]});"
 
-
-# mongoimport -u ${MONGODB_USERNAME} -p ${MONGODB_PASSWORD} --db ${MONGODB_DATABASE} --collection fSMConfiguration --jsonArray --file /docker-dumps/fSMConfiguration.json
-mongoimport -u cerere -p cerere --db ${MONGO_INITDB_DATABASE} --collection fSMConfiguration --jsonArray --file /docker-dumps/fSMConfiguration.json
+# init import for cerere database
+mongoimport -u ${MONGO_NON_ROOT_USERNAME} -p ${MONGO_NON_ROOT_PASSWORD} --db ${MONGO_INITDB_DATABASE} --collection fSMConfiguration --jsonArray --file /docker-dumps/fSMConfiguration.json
